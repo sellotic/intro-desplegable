@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inteligencia Artificial Generativa para la Gestión Docente</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Estilos adicionales para asegurar que el layout ocupe toda la altura */
+        html, body, #app {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Verdana', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="flex h-screen bg-gray-100 font-sans">
+        <!-- El contenido de la aplicación se renderizará aquí -->
+    </div>
+
+    <script>
+        // --- URLs de los Logos y Enlaces---
+        const logo1Url = "https://roxanarebolledo.com/images/logo1DGVM.png";
+        const logo1Link = "https://upla.cl/vinculacion/";
+        const logo2Url = "https://roxanarebolledo.com/images/logo2Fondo2025.png";
+        const logo2Link = "https://upla.cl/vinculacion/2024/12/04/convocatoria-fondo-social-crealab-2025/";
+        const logo3Url = "https://upla.cl/facultad/cienciasnaturalesyexactas/wp-content/uploads/2022/09/05-fac-cs-naturales.png";
+        const logo3Link = "https://upla.cl/facultad/cienciasnaturalesyexactas/";
+        const sidebarImageUrl = "https://github.com/sellotic/iadocente/blob/main/IA%20docentes.gif?raw=true";
+
+
+        // --- Datos del Curso (Actualizados) ---
+        const courseData = {
+            descripcion: {
+                icon: 'info',
+                title: "Introducción al curso",
+                pageHeader: "Inteligencia Artificial Generativa para la Gestión Docente",
+                details: [],
+                introVideoUrl: "https://www.youtube-nocookie.com/embed/Huf2NOEBuxs?si=Dp9x6kPmFMq8W-Pg"
+            },
+            bloque1: {
+                icon: 'book-open',
+                title: "1: Aprendizaje adaptativo",
+                content: "Descubre cómo utilizar la IA para crear rutas de aprendizaje personalizadas que se ajustan al ritmo y estilo de cada estudiante. Se explorarán herramientas para generar material didáctico que responda a las necesidades individuales, fomentando un aprendizaje más profundo y significativo.",
+                videoUrl: "https://www.youtube.com/embed/Rixp5zr4YJU?si=UcvedOWG9jasTxoA&controls=0",
+                videoTitle: "El aula adaptativa"
+            },
+            bloque2: {
+                icon: 'cpu',
+                title: "2: Automatización de tareas",
+                content: "Aprende a optimizar tu tiempo utilizando la IA para automatizar tareas administrativas y repetitivas. Desde la planificación de clases y la creación de presentaciones, hasta la gestión de comunicaciones y la organización de recursos, este módulo te enseñará a delegar trabajo a la tecnología para centrarte en lo que más importa: la enseñanza.",
+                videoUrl: "https://www.youtube.com/embed/NaapBNguSRE?si=TZsPWuuWvcjOPfye&controls=0",
+                videoTitle: "Herramientas de Automatización"
+            },
+            bloque3: {
+                icon: 'award',
+                title: "3: Evaluación de proceso y resultado",
+                content: "Explora cómo la IA puede transformar los procesos de evaluación. Se abordará la creación de instrumentos de evaluación formativa y sumativa, la generación de rúbricas detalladas y la entrega de retroalimentación automatizada y personalizada, permitiendo un seguimiento más eficiente y detallado del progreso del estudiantado.",
+                videoUrl: "https://www.youtube.com/embed/BfR0naWFwQY?si=yswaxIdOfKKlui6A&controls=0",
+                videoTitle: "Evaluación con IA"
+            },
+            bloque4: {
+                icon: 'puzzle',
+                title: "4: Juegos interactivos",
+                content: "Sumérgete en el mundo de la gamificación y aprende a diseñar experiencias de aprendizaje lúdicas. Este módulo te enseñará a utilizar herramientas de IA para crear juegos interactivos que capturen la atención de los estudiantes y refuercen los contenidos curriculares de manera entretenida y efectiva.",
+                videoUrl: "https://www.youtube.com/embed/GtvZF0SYSJs?si=bX2xS6eug3SsPHV0&amp;controls=0",
+                videoTitle: "Creando Juegos con IA"
+            },
+            evaluacion: {
+                icon: 'award',
+                title: "Evaluación Final Integradora",
+                content: "Diseño de una propuesta de integración de IA en su práctica docente, que debe incluir:",
+                details: [
+                    "Una actividad de aprendizaje adaptativo diseñada con IA.",
+                    "Un ejemplo de tarea administrativa automatizada.",
+                    "Un instrumento de evaluación innovador generado con IA.",
+                    "Diseño de juego interactivo."
+                ],
+                summary: "La presentación de esta propuesta demostrará la aplicación práctica de las herramientas y estrategias aprendidas en el curso."
+            },
+            relatora: {
+                icon: 'user',
+                title: "Docente a cargo",
+                content: "",
+                name: "Roxana Rebolledo Font de la Vall",
+                details: [
+                    "Profesora de Inglés y Licenciada en Educación",
+                    "Magíster en Comunicación Educativa y NTIC",
+                    "Doctora (c) en Tecnología Educativa",
+                    "Certificada en Moodle (MEC)"
+                ],
+                website: "roxanarebolledo.com",
+                experienceUrl: "https://roxanarebolledo.com/experiencia",
+            }
+        };
+
+        let activeSection = 'descripcion';
+        let sidebarOpen = false;
+        
+        // --- Render Functions ---
+        function renderApp() {
+            const courseTitle = courseData.descripcion.pageHeader;
+            document.getElementById('app').innerHTML = `
+                <!-- Overlay for mobile -->
+                <div id="sidebar-overlay" class="${sidebarOpen ? 'fixed' : 'hidden'} inset-0 bg-black bg-opacity-50 z-20 lg:hidden"></div>
+
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed lg:relative inset-y-0 left-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out w-72 h-full z-30 shadow-2xl lg:shadow-none">
+                    ${renderSidebar()}
+                </aside>
+
+                <!-- Main Content -->
+                <main class="flex-1 flex flex-col h-screen">
+                    <!-- Main Header with Title and Logo -->
+                    <div class="w-full bg-gradient-to-r from-sky-400 to-sky-600 p-4 shadow-lg border-b border-sky-700 z-10 flex items-center justify-center relative">
+                        <button id="menu-button" class="lg:hidden text-white absolute left-4">
+                            <i data-lucide="menu" class="w-7 h-7"></i>
+                        </button>
+                        <h1 class="text-xl md:text-3xl font-bold text-white text-center tracking-wide">${courseTitle}</h1>
+                    </div>
+
+                    <div id="content-area" class="flex-1 overflow-y-auto">
+                        ${renderContent(activeSection)}
+                    </div>
+                </main>
+            `;
+            // Re-initialize icons and event listeners after every render
+            lucide.createIcons();
+            addEventListeners();
+        }
+
+        function renderSidebar() {
+            const navItems = [
+                { id: 'descripcion', label: 'Introducción al curso' },
+                { id: 'bloque1', label: '1: Aprendizaje Adaptativo' },
+                { id: 'bloque2', label: '2: Automatización de Tareas' },
+                { id: 'bloque3', label: '3: Evaluación de Proceso' },
+                { id: 'bloque4', label: '4: Juegos Interactivos' },
+                { id: 'evaluacion', label: 'Evaluación Final' },
+                { id: 'relatora', label: 'Docente a cargo' },
+            ];
+
+            return `
+                <div class="w-full h-full bg-white text-gray-800 p-5 flex flex-col border-r border-gray-200">
+                    <div class="relative mb-6 pb-4 border-b">
+                        <img src="${sidebarImageUrl}" alt="Cabecera del curso" class="w-full rounded-lg" />
+                        <button id="close-sidebar-button" class="lg:hidden text-gray-600 hover:text-gray-900 absolute top-2 right-2 bg-white/70 backdrop-blur-sm rounded-full p-1">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <nav class="flex-grow">
+                        <ul>
+                            ${navItems.map(item => {
+                                const Icon = courseData[item.id]?.icon;
+                                if (!Icon) return '';
+                                const isActive = activeSection === item.id;
+                                return `
+                                    <li class="mb-2">
+                                        <a href="#" data-section="${item.id}" class="nav-link flex items-center p-3 rounded-lg transition-all duration-300 transform hover:scale-105 ${
+                                            isActive
+                                            ? 'bg-sky-500 text-white shadow-lg'
+                                            : 'hover:bg-sky-100 text-gray-700'
+                                        }">
+                                            <i data-lucide="${Icon}" class="w-5 h-5 mr-3 flex-shrink-0"></i>
+                                            <span class="font-medium">${item.label}</span>
+                                        </a>
+                                    </li>
+                                `;
+                            }).join('')}
+                        </ul>
+                    </nav>
+                </div>
+            `;
+        }
+
+        function renderContent(sectionId) {
+            const section = courseData[sectionId];
+            if (!section) return '<div>Sección no encontrada.</div>';
+
+            const { icon, title, content, name, details, summary, website, videoUrl, experienceUrl, introVideoUrl, videoTitle } = section;
+
+            const detailsHtml = details ? `
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <ul class="space-y-3">
+                        ${details.map(detail => `
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center mr-3 mt-1">
+                                    <span class="font-bold text-sm">✓</span>
+                                </div>
+                                <span class="text-gray-800">${detail}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>` : '';
+
+            const logosHtml = sectionId === 'descripcion' ? `
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                     <div class="text-center mb-6">
+                         <h3 class="text-lg font-semibold text-gray-600">Proyecto adjudicado CREALAB2025</h3>
+                         <p class="text-gray-600">"Ciencia en movimiento: Física, Matemática, IA y Robótica Activa"</p>
+                     </div>
+                    <h3 class="text-center text-lg font-semibold text-gray-600 mb-6">Organizan:</h3>
+                    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                        <a href="${logo1Link}" target="_blank" rel="noopener noreferrer">
+                            <img src="${logo1Url}" alt="Logo DGVM" class="h-16 md:h-20" />
+                        </a>
+                        <a href="${logo2Link}" target="_blank" rel="noopener noreferrer">
+                            <img src="${logo2Url}" alt="Logo Fondo 2025" class="h-16 md:h-20" />
+                        </a>
+                        <a href="${logo3Link}" target="_blank" rel="noopener noreferrer">
+                            <img src="${logo3Url}" alt="Logo FCNA" class="h-16 md:h-20" />
+                        </a>
+                    </div>
+                </div>` : '';
+
+            return `
+                <div class="p-6 sm:p-8 lg:p-10 w-full bg-sky-50">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex items-center text-gray-800 mb-6">
+                            <div class="p-3 bg-white rounded-full shadow-md mr-4">
+                               <i data-lucide="${icon}" class="w-8 h-8 text-sky-600"></i>
+                            </div>
+                            <h1 class="text-3xl lg:text-4xl font-bold tracking-tight">${title}</h1>
+                        </div>
+                        
+                        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                            ${content ? `<p class="text-lg text-gray-700 leading-relaxed mb-6">${content}</p>` : ''}
+                            ${name ? `<h2 class="text-2xl font-semibold text-gray-800 mb-4">${name}</h2>` : ''}
+
+                            ${introVideoUrl ? `
+                                <div class="mb-6">
+                                    <div class="relative w-full" style="padding-top: 56.25%;">
+                                        <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg" src="${introVideoUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${detailsHtml}
+
+                            ${summary ? `
+                                <div class="mt-6 p-4 bg-sky-50 border-l-4 border-sky-500 rounded-r-lg">
+                                    <p class="text-sky-900 font-medium">${summary}</p>
+                                </div>` : ''}
+                            
+                            ${(website || experienceUrl) ? `
+                                <div class="mt-6 flex flex-wrap gap-4">
+                                    ${website ? `<a href="https://${website}" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors shadow-md">Visitar Sitio Web</a>` : ''}
+                                    ${experienceUrl ? `<a href="${experienceUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors shadow-md">Experiencia en IA</a>` : ''}
+                                </div>` : ''}
+
+                            ${videoUrl ? `
+                                <div class="mt-8">
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-4 border-b-2 border-sky-200 pb-2">${videoTitle || (sectionId === 'relatora' ? 'Video de Presentación' : 'Video Complementario')}</h3>
+                                    <div class="relative w-full" style="padding-top: 56.25%;">
+                                        <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg" src="${videoUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                    </div>
+                                </div>` : ''}
+                        </div>
+                        
+                        ${logosHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Event Listeners ---
+        function addEventListeners() {
+            // Sidebar navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activeSection = e.currentTarget.dataset.section;
+                    sidebarOpen = false; // Close sidebar on mobile after click
+                    renderApp();
+                });
+            });
+
+            // Mobile menu toggle
+            const menuButton = document.getElementById('menu-button');
+            if(menuButton) {
+                menuButton.addEventListener('click', () => {
+                    sidebarOpen = true;
+                    renderApp();
+                });
+            }
+
+            // Close sidebar button
+            const closeButton = document.getElementById('close-sidebar-button');
+             if(closeButton) {
+                closeButton.addEventListener('click', () => {
+                    sidebarOpen = false;
+                    renderApp();
+                });
+            }
+
+            // Close sidebar via overlay
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    sidebarOpen = false;
+                    renderApp();
+                });
+            }
+        }
+
+        // --- Initial Render ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+        });
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
