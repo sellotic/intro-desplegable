@@ -100,6 +100,7 @@
                 ],
                 website: "roxanarebolledo.com",
                 experienceUrl: "https://roxanarebolledo.com/experiencia",
+                trajectoryUrl: "https://youtu.be/b6HHYKbMCmg?si=zkdyBrYc8xX8EhGa"
             }
         };
 
@@ -186,7 +187,7 @@
             const section = courseData[sectionId];
             if (!section) return '<div>Sección no encontrada.</div>';
 
-            const { icon, title, content, name, details, summary, website, videoUrl, experienceUrl, introVideoUrl, videoTitle } = section;
+            const { icon, title, content, name, details, summary, website, videoUrl, experienceUrl, introVideoUrl, videoTitle, trajectoryUrl } = section;
 
             const detailsHtml = details ? `
                 <div class="mt-6 pt-6 border-t border-gray-200">
@@ -251,10 +252,11 @@
                                     <p class="text-sky-900 font-medium">${summary}</p>
                                 </div>` : ''}
                             
-                            ${(website || experienceUrl) ? `
+                            ${(website || experienceUrl || trajectoryUrl) ? `
                                 <div class="mt-6 flex flex-wrap gap-4">
                                     ${website ? `<a href="https://${website}" target="_blank" rel="noopener noreferrer" class="inline-block bg-sky-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors shadow-md">Visitar Sitio Web</a>` : ''}
                                     ${experienceUrl ? `<a href="${experienceUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-gray-700 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-800 transition-colors shadow-md">Experiencia en IA</a>` : ''}
+                                    ${trajectoryUrl ? `<a href="${trajectoryUrl}" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors shadow-md">Trayectoria</a>` : ''}
                                 </div>` : ''}
 
                             ${videoUrl ? `
@@ -320,6 +322,7 @@
     </script>
 </body>
 </html>
+
 
 
 
